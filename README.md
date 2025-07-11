@@ -1,9 +1,4 @@
-# helloworld
+#SteamFriend
 
-AstrBot 插件模板
+缓慢施工中。。。
 
-A template plugin for AstrBot plugin feature
-
-# 支持
-
-[帮助文档](https://astrbot.app)
