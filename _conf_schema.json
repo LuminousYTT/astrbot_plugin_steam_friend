@@ -10,11 +10,28 @@
 		"description": "Steam状态检查间隔（秒）",
 		"hint": "每隔多少秒检查一次Steam好友状态，默认为60秒"
 	},
-	"group_config": {
-		"type": "text",
+	"groups": {
+		"type": "list",
 		"description": "按QQ群分组的Steam监控配置",
-		"hint": "每行填写格式：群号:SteamID1,SteamID2...",
-		"editor_mode": true,
-		"editor_language": "plaintext"
+		"items": {
+			"type": "object",
+			"properties": {
+				"group_id": {
+					"type": "string",
+					"description": "QQ群号"
+				},
+				"steam_ids": {
+					"type": "list",
+					"items": {
+						"type": "string"
+					},
+					"description": "该群要监控的Steam好友ID列表"
+				}
+			},
+			"required": [
+				"group_id",
+				"steam_ids"
+			]
+		}
 	}
 }

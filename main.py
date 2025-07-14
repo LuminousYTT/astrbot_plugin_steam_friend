@@ -8,11 +8,14 @@ import aiohttp
 class SteamStatusPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
-        self.config = context.get_config()
+        self.config = context.get_config()  # 获取插件配置
+
+        # 从配置中读取 steam_api_key 和 poll_interval
         self.steam_api_key = self.config.get("steam_api_key", "")
         self.poll_interval = self.config.get("poll_interval", 60)
-        self.group_config = self.config.get("group_config", "")
-        self.last_status = {}  # steamid -> status
+
+        # 用于保存上次检查的好友状态
+        self.last_status = {}
 
         # 启动定时任务
         asyncio.create_task(self.poll_steam_status())
@@ -21,29 +24,14 @@ class SteamStatusPlugin(Star):
         while True:
             await asyncio.sleep(self.poll_interval)
             try:
-                group_configs = self.parse_group_config(self.group_config)
-                for group_qq, steam_ids in group_configs.items():
-                    await self.check_friend_statuses(steam_ids, group_qq)
+                groups = self.config.get("groups", [])
+                for group in groups:
+                    group_id = group.get("group_id")
+                    steam_ids = group.get("steam_ids", [])
+                    if group_id and steam_ids:
+                        await self.check_friend_statuses(steam_ids, group_id)
             except Exception as e:
                 logger.error(f"Steam状态检查失败: {e}")
-
-    def parse_group_config(self, config_text: str):
-        """
-        解析用户输入的配置文本。
-        格式: 群号:SteamID1,SteamID2
-        返回: dict[group_qq] = list[steam_ids]
-        """
-        result = {}
-        lines = config_text.strip().splitlines()
-        for line in lines:
-            if not line.strip() or ':' not in line:
-                continue
-            group_part, steam_part = line.split(':', 1)
-            group_qq = group_part.strip()
-            steam_ids = [sid.strip() for sid in steam_part.split(',') if sid.strip()]
-            if group_qq and steam_ids:
-                result[group_qq] = steam_ids
-        return result
 
     async def check_friend_statuses(self, friend_ids, target_group_id):
         if not self.steam_api_key or not friend_ids:
