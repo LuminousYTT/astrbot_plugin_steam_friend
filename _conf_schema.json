@@ -1,0 +1,32 @@
+{
+	"steam_api_key": {
+		"type": "string",
+		"description": "Steam Web API 密钥",
+		"hint": "前往 https://steamcommunity.com/dev/apikey  申请"
+	},
+	"poll_interval": {
+		"type": "int",
+		"default": 60,
+		"description": "Steam状态检查间隔（秒）",
+		"hint": "每隔多少秒检查一次Steam好友状态，默认为60秒"
+	},
+	"groups": {
+		"type": "object",
+		"description": "按QQ群分组的Steam监控配置",
+		"items": {
+			"group_steam_ids": {
+				"type": "list",
+				"items": {
+					"type": "string"
+				},
+				"description": "该群要监控的Steam好友ID列表",
+				"hint": "输入要监控的Steam好友的64位ID，多个用逗号分隔"
+			},
+			"target_group_id": {
+				"type": "string",
+				"description": "接收Steam状态变更通知的QQ群ID",
+				"hint": "留空则默认为此群本身"
+			}
+		}
+	}
+}
