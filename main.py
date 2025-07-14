@@ -18,7 +18,7 @@ class SteamStatusPlugin(Star):
         self.last_status = {}
 
         # 启动定时任务
-        asyncio.create_task(self.poll_steam_status())
+        # asyncio.create_task(self.poll_steam_status())
 
     async def poll_steam_status(self):
         while True:
